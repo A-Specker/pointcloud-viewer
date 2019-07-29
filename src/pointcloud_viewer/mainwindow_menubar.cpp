@@ -14,175 +14,160 @@
 
 void MainWindow::initMenuBar()
 {
-  QMenuBar* menuBar = new QMenuBar;
-  menuBar->setVisible(true);
-  setMenuBar(menuBar);
+    QMenuBar* menuBar = new QMenuBar;
+    menuBar->setVisible(true);
+    setMenuBar(menuBar);
 
-  // ======== Project ==================================================================================================
-  QMenu* menu_project = menuBar->addMenu("&Project");
-  QAction* import_pointcloud_layers = menu_project->addAction("&Import Pointcloud");
-  QAction* export_pointcloud = menu_project->addAction("&Save Pointcloud");
+    // ======== Project ==================================================================================================
+    QMenu* menu_project = menuBar->addMenu("&Project");
+    QAction* import_pointcloud_layers = menu_project->addAction("&Import Pointcloud");
+    QAction* export_pointcloud = menu_project->addAction("&Save Pointcloud");
 
-  import_pointcloud_layers->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
-  connect(import_pointcloud_layers, &QAction::triggered, this, &MainWindow::importPointcloudLayer);
+    import_pointcloud_layers->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
+    connect(import_pointcloud_layers, &QAction::triggered, this, &MainWindow::importPointcloudLayer);
 
-  export_pointcloud->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
-  export_pointcloud->setEnabled(false);
-  connect(export_pointcloud, &QAction::triggered, this, &MainWindow::exportPointcloud);
-  connect(this, &MainWindow::pointcloud_unloaded, [export_pointcloud](){
+    export_pointcloud->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
     export_pointcloud->setEnabled(false);
-  });
-  connect(this, &MainWindow::pointcloud_imported, [export_pointcloud](){
-    export_pointcloud->setEnabled(true);
-  });
+    connect(export_pointcloud, &QAction::triggered, this, &MainWindow::exportPointcloud);
+    connect(this, &MainWindow::pointcloud_unloaded, [export_pointcloud](){
+        export_pointcloud->setEnabled(false);
+    });
+    connect(this, &MainWindow::pointcloud_imported, [export_pointcloud](){
+        export_pointcloud->setEnabled(true);
+    });
 
-  // ======== Flythrough ===============================================================================================
-  QMenu* menu_flythrough = menuBar->addMenu("&Flythrough");
-  QAction* action_flythrough_export_path = menu_flythrough->addAction("&Export Path");
-  QAction* action_flythrough_import_path = menu_flythrough->addAction("&Import Path");
+    // ======== Flythrough ===============================================================================================
+    QMenu* menu_flythrough = menuBar->addMenu("&Flythrough");
+    QAction* action_flythrough_export_path = menu_flythrough->addAction("&Export Path");
+    QAction* action_flythrough_import_path = menu_flythrough->addAction("&Import Path");
 
-  connect(action_flythrough_export_path, &QAction::triggered, this, &MainWindow::exportCameraPath);
-  connect(action_flythrough_import_path, &QAction::triggered, this, &MainWindow::importCameraPath);
+    connect(action_flythrough_export_path, &QAction::triggered, this, &MainWindow::exportCameraPath);
+    connect(action_flythrough_import_path, &QAction::triggered, this, &MainWindow::importCameraPath);
 
-  // ======== View =====================================================================================================
-  QMenu* menu_view = menuBar->addMenu("&View");
+    // ======== View =====================================================================================================
+    QMenu* menu_view = menuBar->addMenu("&View");
 
-  // -------- Navigation -----------------------------------------------------------------------------------------------
-  QMenu* menu_view_navigation = menu_view->addMenu("&Navigation");
-  menu_view_navigation->addSection("Usability &Scheme");
-  QAction* menu_view_navigation_scheme_blender = menu_view_navigation->addAction("&Blender");
-  QAction* menu_view_navigation_scheme_meshlab = menu_view_navigation->addAction("&MeshLab");
-  menu_view_navigation->addSeparator();
-  QAction* action_view_navigation_fps = menu_view_navigation->addAction("&First Person Navigation");
-  QAction* action_view_navigation_reset_camera_frame = menu_view_navigation->addAction("Reset Camera &Frame");
-  QAction* action_view_navigation_reset_movement_speed = menu_view_navigation->addAction("Reset Movement &Velocity");
-  menu_view_navigation->addSeparator();
-  QAction* action_view_navigation_zoom_to_current_point = menu_view_navigation->addAction("Zoom to Current &Point");
+    // -------- Navigation -----------------------------------------------------------------------------------------------
+    QMenu* menu_view_navigation = menu_view->addMenu("&Navigation");
+    menu_view_navigation->addSection("Usability &Scheme");
+    QAction* menu_view_navigation_scheme_blender = menu_view_navigation->addAction("&Blender");
+    QAction* menu_view_navigation_scheme_meshlab = menu_view_navigation->addAction("&MeshLab");
+    menu_view_navigation->addSeparator();
+    QAction* action_view_navigation_fps = menu_view_navigation->addAction("&First Person Navigation");
+    QAction* action_view_navigation_reset_camera_frame = menu_view_navigation->addAction("Reset Camera &Frame");
+    QAction* action_view_navigation_reset_movement_speed = menu_view_navigation->addAction("Reset Movement &Velocity");
+    menu_view_navigation->addSeparator();
+    QAction* action_view_navigation_zoom_to_current_point = menu_view_navigation->addAction("Zoom to Current &Point");
 
-  action_view_navigation_fps->setShortcut(viewport.navigation.usabilityScheme().fps_activation_key_sequence());
-  action_view_navigation_zoom_to_current_point->setShortcut(viewport.navigation.usabilityScheme().zoom_to_current_point_activation_key_sequence());
-  connect(&viewport.navigation.usabilityScheme(), &UsabilityScheme::fpsActivationKeySequenceChanged, action_view_navigation_fps, &QAction::setShortcut);
-  connect(&viewport.navigation.usabilityScheme(), &UsabilityScheme::zoomToCurrentPointActivationKeySequenceChanged, action_view_navigation_zoom_to_current_point, &QAction::setShortcut);
-  connect(action_view_navigation_fps, &QAction::triggered, &viewport.navigation, &Navigation::startFpsNavigation);
-  connect(action_view_navigation_reset_camera_frame, &QAction::triggered, &viewport.navigation, &Navigation::resetCameraLocation);
-  connect(action_view_navigation_reset_movement_speed, &QAction::triggered, &viewport.navigation, &Navigation::resetMovementSpeed);
-  connect(action_view_navigation_zoom_to_current_point, &QAction::triggered, &viewport.navigation.usabilityScheme(), &UsabilityScheme::zoom_to_current_point);
+    action_view_navigation_fps->setShortcut(viewport.navigation.usabilityScheme().fps_activation_key_sequence());
+    action_view_navigation_zoom_to_current_point->setShortcut(viewport.navigation.usabilityScheme().zoom_to_current_point_activation_key_sequence());
+    connect(&viewport.navigation.usabilityScheme(), &UsabilityScheme::fpsActivationKeySequenceChanged, action_view_navigation_fps, &QAction::setShortcut);
+    connect(&viewport.navigation.usabilityScheme(), &UsabilityScheme::zoomToCurrentPointActivationKeySequenceChanged, action_view_navigation_zoom_to_current_point, &QAction::setShortcut);
+    connect(action_view_navigation_fps, &QAction::triggered, &viewport.navigation, &Navigation::startFpsNavigation);
+    connect(action_view_navigation_reset_camera_frame, &QAction::triggered, &viewport.navigation, &Navigation::resetCameraLocation);
+    connect(action_view_navigation_reset_movement_speed, &QAction::triggered, &viewport.navigation, &Navigation::resetMovementSpeed);
+    connect(action_view_navigation_zoom_to_current_point, &QAction::triggered, &viewport.navigation.usabilityScheme(), &UsabilityScheme::zoom_to_current_point);
 
-  QActionGroup* usability_schemes = new QActionGroup(this);
-  menu_view_navigation_scheme_blender->setActionGroup(usability_schemes);
-  menu_view_navigation_scheme_meshlab->setActionGroup(usability_schemes);
-  menu_view_navigation_scheme_blender->setCheckable(true);
-  menu_view_navigation_scheme_meshlab->setCheckable(true);
-  auto update_ui_for_scheme = [menu_view_navigation_scheme_blender, menu_view_navigation_scheme_meshlab](UsabilityScheme::scheme_t scheme){
-    switch(scheme)
-    {
-    case UsabilityScheme::DUMMY:
-      break;
-    case UsabilityScheme::BLENDER:
-      menu_view_navigation_scheme_blender->setChecked(true);
-      break;
-    case UsabilityScheme::MESHLAB:
-      menu_view_navigation_scheme_meshlab->setChecked(true);
-      break;
-    }
-  };
-  update_ui_for_scheme(viewport.navigation.usabilityScheme().enabled_scheme());
-  connect(&viewport.navigation.usabilityScheme(), &UsabilityScheme::schemeChanged, update_ui_for_scheme);
-  connect(usability_schemes, &QActionGroup::triggered, [=](QAction* action){
-    if(action==menu_view_navigation_scheme_blender)
-      viewport.navigation.usabilityScheme().enableBlenderScheme();
-    else if(action==menu_view_navigation_scheme_meshlab)
-      viewport.navigation.usabilityScheme().enableMeshlabScheme();
-  });
+    QActionGroup* usability_schemes = new QActionGroup(this);
+    menu_view_navigation_scheme_blender->setActionGroup(usability_schemes);
+    menu_view_navigation_scheme_meshlab->setActionGroup(usability_schemes);
+    menu_view_navigation_scheme_blender->setCheckable(true);
+    menu_view_navigation_scheme_meshlab->setCheckable(true);
+    auto update_ui_for_scheme = [menu_view_navigation_scheme_blender, menu_view_navigation_scheme_meshlab](UsabilityScheme::scheme_t scheme){
+        switch(scheme)
+        {
+            case UsabilityScheme::DUMMY:
+                break;
+            case UsabilityScheme::BLENDER:
+                menu_view_navigation_scheme_blender->setChecked(true);
+                break;
+            case UsabilityScheme::MESHLAB:
+                menu_view_navigation_scheme_meshlab->setChecked(true);
+                break;
+        }
+    };
+    update_ui_for_scheme(viewport.navigation.usabilityScheme().enabled_scheme());
+    connect(&viewport.navigation.usabilityScheme(), &UsabilityScheme::schemeChanged, update_ui_for_scheme);
+    connect(usability_schemes, &QActionGroup::triggered, [=](QAction* action){
+        if(action==menu_view_navigation_scheme_blender)
+            viewport.navigation.usabilityScheme().enableBlenderScheme();
+        else if(action==menu_view_navigation_scheme_meshlab)
+            viewport.navigation.usabilityScheme().enableMeshlabScheme();
+    });
 
-  // -------- Visualization --------------------------------------------------------------------------------------------
-  QMenu* menu_view_visualization = menu_view->addMenu("&Visualization");
-  QAction* action_view_visualization_camerapath = menu_view_visualization->addAction("&Camera Path");
-  QAction* action_view_visualization_grid = menu_view_visualization->addAction("&Grid");
-  QAction* action_view_visualization_axis = menu_view_visualization->addAction("&Axis");
-  QAction* action_view_visualization_picked_cone = menu_view_visualization->addAction("Picked &Cone");
-  QAction* action_view_visualization_selected_point = menu_view_visualization->addAction("Selected &Point");
+    // -------- Visualization --------------------------------------------------------------------------------------------
+    QMenu* menu_view_visualization = menu_view->addMenu("&Visualization");
+    QAction* action_view_visualization_camerapath = menu_view_visualization->addAction("&Camera Path");
+    QAction* action_view_visualization_grid = menu_view_visualization->addAction("&Grid");
+    QAction* action_view_visualization_axis = menu_view_visualization->addAction("&Axis");
+    QAction* action_view_visualization_picked_cone = menu_view_visualization->addAction("Picked &Cone");
+    QAction* action_view_visualization_selected_point = menu_view_visualization->addAction("Selected &Point");
 #ifndef NDEBUG
-  menu_view_visualization->addSeparator();
-  QAction* action_view_visualization_debug_turntable_center = menu_view_visualization->addAction("&Turntable Center");
+    menu_view_visualization->addSeparator();
+    QAction* action_view_visualization_debug_turntable_center = menu_view_visualization->addAction("&Turntable Center");
 #endif
 
-  Visualization::settings_t current_settings = Visualization::settings_t::default_settings();
+    Visualization::settings_t current_settings = Visualization::settings_t::default_settings();
 
 #define TOGGLE(item, var) \
   item->setCheckable(true); \
   item->setChecked(current_settings.var); \
   connect(item, &QAction::toggled, [this, item](){viewport.visualization().settings.var = item->isChecked(); viewport.update();});
 
-  action_view_visualization_camerapath->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_1));
-  TOGGLE(action_view_visualization_camerapath, enable_camera_path);
+    action_view_visualization_camerapath->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_1));
+    TOGGLE(action_view_visualization_camerapath, enable_camera_path);
 
-  action_view_visualization_grid->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_2));
-  TOGGLE(action_view_visualization_grid, enable_grid);
+    action_view_visualization_grid->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_2));
+    TOGGLE(action_view_visualization_grid, enable_grid);
 
-  action_view_visualization_axis->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_3));
-  TOGGLE(action_view_visualization_axis, enable_axis);
+    action_view_visualization_axis->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_3));
+    TOGGLE(action_view_visualization_axis, enable_axis);
 
-  action_view_visualization_picked_cone->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
-  TOGGLE(action_view_visualization_picked_cone, enable_picked_cone);
+    action_view_visualization_picked_cone->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
+    TOGGLE(action_view_visualization_picked_cone, enable_picked_cone);
 
-  action_view_visualization_selected_point->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
-  TOGGLE(action_view_visualization_selected_point, enable_selected_point);
+    action_view_visualization_selected_point->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
+    TOGGLE(action_view_visualization_selected_point, enable_selected_point);
 
 #ifndef NDEBUG
-  action_view_visualization_debug_turntable_center->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_1));
-  TOGGLE(action_view_visualization_debug_turntable_center, enable_turntable_center);
+    action_view_visualization_debug_turntable_center->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_1));
+    TOGGLE(action_view_visualization_debug_turntable_center, enable_turntable_center);
 #endif
 
 #undef TOGGLE
-    // ======== Voxel ==============================================================================================
-  QMenu* menu_view_voxel = menuBar->addMenu("&Application");
-  QAction* about_action = menu_view_application->addAction("&About");
 
-  // ======== Application ==============================================================================================
-  QMenu* menu_view_application = menuBar->addMenu("&Application");
-  QAction* import_voxels = menu_project->addAction("&Import Voxels");
-
+    // ======== Application ==============================================================================================
+    QMenu* menu_view_application = menuBar->addMenu("&Application");
+    QAction* about_action = menu_view_application->addAction("&About");
     connect(about_action, &QAction::triggered, this, &MainWindow::openAboutDialog);
 
-  setAcceptDrops(true);
+    setAcceptDrops(true);
 
 }
 
 void MainWindow::dropEvent(QDropEvent *ev)
 {
-  QList<QUrl> urls = ev->mimeData()->urls();
-  foreach (QUrl url, urls) {
-    const QString file_to_import = url.path();
-    if(file_to_import.isEmpty())
-      return;
-    import_pointcloud(file_to_import);
-    return;
-  }
+    QList<QUrl> urls = ev->mimeData()->urls();
+            foreach (QUrl url, urls) {
+            const QString file_to_import = url.path();
+            if(file_to_import.isEmpty())
+                return;
+            import_pointcloud(file_to_import);
+            return;
+        }
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *ev)
 {
-  ev->accept();
+    ev->accept();
 }
 
 void MainWindow::closeEvent(QCloseEvent*)
 {
-  QApplication::quit();
+    QApplication::quit();
 }
 
 void MainWindow::import_pointcloud(QString filepath)
-{
-  pointcloud_unloaded();
-
-  QSharedPointer<PointCloud> pointcloud = import_point_cloud(this, filepath);
-
-  if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
-    pointcloud_imported(pointcloud);
-}
-
-//spx
-void MainWindow::import_voxel(QString filepath)
 {
     pointcloud_unloaded();
 
@@ -194,34 +179,34 @@ void MainWindow::import_voxel(QString filepath)
 
 void MainWindow::export_pointcloud(QString filepath, QString selectedFilter)
 {
-  if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
-    export_point_cloud(this, filepath, *pointcloud, selectedFilter);
+    if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
+        export_point_cloud(this, filepath, *pointcloud, selectedFilter);
 }
 
 void MainWindow::exportCameraPath()
 {
-  QString file_to_export = QFileDialog::getSaveFileName(this,
-                                                        "Save camera path as",
-                                                        ".",
-                                                        "Camera Path (*.camera_path)");
+    QString file_to_export = QFileDialog::getSaveFileName(this,
+                                                          "Save camera path as",
+                                                          ".",
+                                                          "Camera Path (*.camera_path)");
 
-  if(file_to_export.isEmpty())
-    return;
+    if(file_to_export.isEmpty())
+        return;
 
-  flythrough.export_path(file_to_export);
+    flythrough.export_path(file_to_export);
 }
 
 void MainWindow::importCameraPath()
 {
-  QString file_to_import = QFileDialog::getOpenFileName(this,
-                                                        "Import camera path as",
-                                                        ".",
-                                                        "Camera Path (*.camera_path)");
+    QString file_to_import = QFileDialog::getOpenFileName(this,
+                                                          "Import camera path as",
+                                                          ".",
+                                                          "Camera Path (*.camera_path)");
 
-  if(file_to_import.isEmpty())
-    return;
+    if(file_to_import.isEmpty())
+        return;
 
-  flythrough.import_path(file_to_import);
+    flythrough.import_path(file_to_import);
 }
 
 #include <QVBoxLayout>
@@ -234,24 +219,10 @@ void MainWindow::importCameraPath()
 
 void MainWindow::importPointcloudLayer()
 {
-  QString file_to_import = QFileDialog::getOpenFileName(this,
-                                                         "Select pointcloud to import",
-                                                         ".",
-                                                         AbstractPointCloudImporter::allSupportedFiletypes());
-
-  if(file_to_import.isEmpty())
-    return;
-
-  import_pointcloud(file_to_import);
-}
-
-//spx
-void MainWindow::importVoxels()
-{
     QString file_to_import = QFileDialog::getOpenFileName(this,
-                                                          "Select Voxel File",
+                                                          "Select pointcloud to import",
                                                           ".",
-                                                          AbstractPointCloudImporter::allSupportedFiletypesVoxel());
+                                                          AbstractPointCloudImporter::allSupportedFiletypes());
 
     if(file_to_import.isEmpty())
         return;
@@ -261,17 +232,17 @@ void MainWindow::importVoxels()
 
 void MainWindow::exportPointcloud()
 {
-  QString selectedFilter;
-  QString file_to_export_to = QFileDialog::getSaveFileName(this,
-                                                           "Export as",
-                                                           ".",
-                                                           AbstractPointCloudExporter::allSupportedFiletypes(),
-                                                           &selectedFilter);
+    QString selectedFilter;
+    QString file_to_export_to = QFileDialog::getSaveFileName(this,
+                                                             "Export as",
+                                                             ".",
+                                                             AbstractPointCloudExporter::allSupportedFiletypes(),
+                                                             &selectedFilter);
 
-  if(file_to_export_to.isEmpty())
-    return;
+    if(file_to_export_to.isEmpty())
+        return;
 
-  export_pointcloud(file_to_export_to, selectedFilter);
+    export_pointcloud(file_to_export_to, selectedFilter);
 }
 
 extern const QString pcl_notes;
@@ -279,33 +250,33 @@ extern const QString pcl_license;
 
 void MainWindow::openAboutDialog()
 {
-  QDialog aboutDialog;
-  aboutDialog.setModal(true);
-  aboutDialog.setSizeGripEnabled(true);
+    QDialog aboutDialog;
+    aboutDialog.setModal(true);
+    aboutDialog.setSizeGripEnabled(true);
 
-  QVBoxLayout* layout = new QVBoxLayout;
-  aboutDialog.setLayout(layout);
+    QVBoxLayout* layout = new QVBoxLayout;
+    aboutDialog.setLayout(layout);
 
-  auto add_note = [&](QString info, QString details){
-    QLabel* label = new QLabel(info);
-    QPlainTextEdit* plain_text_edit = new QPlainTextEdit(details);
+    auto add_note = [&](QString info, QString details){
+        QLabel* label = new QLabel(info);
+        QPlainTextEdit* plain_text_edit = new QPlainTextEdit(details);
 
-    plain_text_edit->setWordWrapMode(QTextOption::NoWrap);
-    plain_text_edit->setReadOnly(true);
+        plain_text_edit->setWordWrapMode(QTextOption::NoWrap);
+        plain_text_edit->setReadOnly(true);
 
-    layout->addWidget(label);
-    layout->addWidget(plain_text_edit);
+        layout->addWidget(label);
+        layout->addWidget(plain_text_edit);
+        layout->addSpacing(22);
+    };
+
+    layout->addWidget(new QLabel("Version " + version_text()));
     layout->addSpacing(22);
-  };
+    layout->addWidget(new QLabel("Dependencies:"));
+    layout->addSpacing(12);
 
-  layout->addWidget(new QLabel("Version " + version_text()));
-  layout->addSpacing(22);
-  layout->addWidget(new QLabel("Dependencies:"));
-  layout->addSpacing(12);
+    add_note(pcl_notes, pcl_license);
 
-  add_note(pcl_notes, pcl_license);
-
-  aboutDialog.exec();
+    aboutDialog.exec();
 }
 
 const QString pcl_notes = "The Point Cloud Library (PCL) is used for:\n"

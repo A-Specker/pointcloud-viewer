@@ -53,8 +53,8 @@ private:
   void importPointcloudLayer();
   void exportPointcloud();
   void openAboutDialog();
-  //spx
-  void importVoxels();
+  //spx voxelviewer branch
+//  void importVoxels();
 
   void exportCameraPath();
   void importCameraPath();

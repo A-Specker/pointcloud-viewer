@@ -32,10 +32,10 @@ QString AbstractPointCloudImporter::allSupportedFiletypes()
   return "All Supported (*.pcvd *.ply);;PCVD (*.pcvd);;PLY (*.ply);;NPY (*.npy *npz)";
 }
 //spx
-QString AbstractPointCloudImporter::allSupportedFiletypesVoxel()
-{
-    return "All Supported (*.pcvd *.ply);;PCVD (*.pcvd);;PLY (*.ply)";
-}
+//QString AbstractPointCloudImporter::allSupportedFiletypesVoxel()
+//{
+//    return "All Supported (*.pcvd *.ply);;PCVD (*.pcvd);;PLY (*.ply)";
+//}
 
 
 void AbstractPointCloudImporter::import()
