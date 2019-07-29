@@ -135,11 +135,15 @@ void MainWindow::initMenuBar()
 #endif
 
 #undef TOGGLE
+    // ======== Voxel ==============================================================================================
+  QMenu* menu_view_voxel = menuBar->addMenu("&Application");
+  QAction* about_action = menu_view_application->addAction("&About");
 
   // ======== Application ==============================================================================================
   QMenu* menu_view_application = menuBar->addMenu("&Application");
-  QAction* about_action = menu_view_application->addAction("&About");
-  connect(about_action, &QAction::triggered, this, &MainWindow::openAboutDialog);
+  QAction* import_voxels = menu_project->addAction("&Import Voxels");
+
+    connect(about_action, &QAction::triggered, this, &MainWindow::openAboutDialog);
 
   setAcceptDrops(true);
 
@@ -175,6 +179,17 @@ void MainWindow::import_pointcloud(QString filepath)
 
   if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
     pointcloud_imported(pointcloud);
+}
+
+//spx
+void MainWindow::import_voxel(QString filepath)
+{
+    pointcloud_unloaded();
+
+    QSharedPointer<PointCloud> pointcloud = import_point_cloud(this, filepath);
+
+    if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
+        pointcloud_imported(pointcloud);
 }
 
 void MainWindow::export_pointcloud(QString filepath, QString selectedFilter)
@@ -228,6 +243,20 @@ void MainWindow::importPointcloudLayer()
     return;
 
   import_pointcloud(file_to_import);
+}
+
+//spx
+void MainWindow::importVoxels()
+{
+    QString file_to_import = QFileDialog::getOpenFileName(this,
+                                                          "Select Voxel File",
+                                                          ".",
+                                                          AbstractPointCloudImporter::allSupportedFiletypesVoxel());
+
+    if(file_to_import.isEmpty())
+        return;
+
+    import_pointcloud(file_to_import);
 }
 
 void MainWindow::exportPointcloud()

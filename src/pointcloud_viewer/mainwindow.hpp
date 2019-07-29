@@ -53,6 +53,8 @@ private:
   void importPointcloudLayer();
   void exportPointcloud();
   void openAboutDialog();
+  //spx
+  void importVoxels();
 
   void exportCameraPath();
   void importCameraPath();
@@ -74,6 +76,9 @@ private:
 
   void import_pointcloud(QString filepath);
   void export_pointcloud(QString filepath, QString selectedFilter);
+
+  void import_voxel(QString filepath);
+
 };
 
 
