@@ -1,7 +1,7 @@
 //spx
 
 #include "import_voxel.h"
-#include <external/cnpy/cnpy.h>
+#include <external/libnpy/npy.hpp>
 
 #include <pointcloud_viewer/workers/import_pointcloud.hpp>
 //#include <pointcloud_viewer/mainwindow.hpp>
@@ -18,12 +18,26 @@
 #include <QAbstractEventDispatcher>
 #include <fstream>
 
+int voxel_dim(size_t total_size){
+    double l = std::cbrt(total_size);
+    if (!(round(l) == l)){
+        throw std::runtime_error("Every Dimension of voxel has to be the same.");
+    }
+    return (int)l;
+}
 
 QSharedPointer<PointCloud> import_voxel_cloud(QWidget* parent, QString filepath){
     QFileInfo file(filepath);
     const std::string filepath_std = file.absoluteFilePath().toStdString();
 
-    cnpy::NpyArray voxels = cnpy::npy_load(filepath_std);
+    std::vector<unsigned long> shape;
+    std::vector<float64_t > data; // TODO: hier waere was dynamisches schoener
+    npy::LoadArrayFromNumpy(filepath_std, shape, data);
+
+    int dim = voxel_dim(data.size());
+    std::cout << dim << std::endl;
+
+
 //    std::cout << voxels.num_vals << std::endl;
 //    if(!file.exists())
 //    {
@@ -51,3 +65,5 @@ QSharedPointer<PointCloud> import_voxel_cloud(QWidget* parent, QString filepath)
     return QSharedPointer<PointCloud>(new PointCloud);
 
 }
+
+

@@ -36,5 +36,7 @@ target_link_libraries(boost_sort INTERFACE ${CMAKE_THREAD_LIBS_INIT})
 ######## cnpy ########
 #target_add_library(cnpy ${CMAKE_CURRENT_SOURCE_DIR}/cnpy/cnpy.cpp)
 #target_include_directories
-##target_link_libraries(cnpy PUBLIC)
-#add_subdirectory(cnpy)
+#target_link_libraries(cnpy PUBLIC)
+#add_subdirectory(libnpy)
+add_library(libnpy INTERFACE)
+target_include_directories(libnpy INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/libnpy)

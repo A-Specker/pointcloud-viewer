@@ -259,8 +259,6 @@ void MainWindow::importVoxels()
 
     if(file_to_import.isEmpty())
         return;
-
-    import_pointcloud(file_to_import);
     import_voxel(file_to_import);
 }
 
