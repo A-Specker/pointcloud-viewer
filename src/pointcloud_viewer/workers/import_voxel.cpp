@@ -18,23 +18,35 @@
 #include <QAbstractEventDispatcher>
 #include <fstream>
 
-int voxel_dim(size_t total_size){
+static float SCALE = 1.0f;
+QSharedPointer<PointCloud> failing(){return QSharedPointer<PointCloud>(new PointCloud);}
+
+int voxel_dim(size_t total_size, QWidget* parent){
     double l = std::cbrt(total_size);
     if (!(round(l) == l)){
-        throw std::runtime_error("Every Dimension of voxel has to be the same.");
+        QMessageBox::warning(parent, "Voxel Dimesnion", QString("Cant split Voxel data in 3 even Dimensions"));
+        return -1;
     }
     return (int)l;
 }
 
+
+
 QSharedPointer<PointCloud> import_voxel_cloud(QWidget* parent, QString filepath){
+
     QFileInfo file(filepath);
     const std::string filepath_std = file.absoluteFilePath().toStdString();
+    const QString suffix = file.suffix();
+    QSharedPointer<AbstractPointCloudImporter> importer = AbstractPointCloudImporter::importerForSuffix(suffix, filepath_std);
 
     std::vector<unsigned long> shape;
     std::vector<float64_t > data; // TODO: hier waere was dynamisches schoener
     npy::LoadArrayFromNumpy(filepath_std, shape, data);
 
-    int dim = voxel_dim(data.size());
+    int dim = voxel_dim(data.size(), parent);
+    if (dim == -1)
+        return failing();
+
     std::cout << dim << std::endl;
 
 
