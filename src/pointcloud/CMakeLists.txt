@@ -25,7 +25,7 @@ add_library(pointcloud STATIC
  kdtree_index.hpp
  pointcloud.cpp
  pointcloud.hpp
-)
+        importer/npy_importer.cpp importer/npy_importer.h)
 
 target_link_libraries(pointcloud PUBLIC boost_sort Qt5::Core core_library geometry pcl)
 

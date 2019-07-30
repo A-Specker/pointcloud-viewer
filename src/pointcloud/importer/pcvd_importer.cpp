@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-exception-baseclass"
 #include <pointcloud/importer/pcvd_importer.hpp>
 #include <pointcloud/pcvd_file_format.hpp>
 #include <fstream>
@@ -208,3 +210,5 @@ bool PcvdImporter::import_implementation()
 
   return true;
 }
+
+#pragma clang diagnostic pop

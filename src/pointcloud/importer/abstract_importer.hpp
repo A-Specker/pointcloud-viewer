@@ -36,8 +36,10 @@ public:
 
   static QSharedPointer<AbstractPointCloudImporter> importerForSuffix(QString suffix, std::string filepath);
   static QString allSupportedFiletypes();
-//  static QString allSupportedFiletypesVoxel(); //spx -b vox
-//v2
+
+  static QSharedPointer<AbstractPointCloudImporter> importerForSuffixVoxel(QString suffix, std::string filepath); //spx
+  static QString allSupportedFiletypesVoxel(); //spx
+
 public slots:
   void import();
   void cancel();

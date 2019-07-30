@@ -10,3 +10,6 @@
 [submodule "src/external/nodeeditor"]
 	path = src/external/nodeeditor
 	url = git@github.com:paceholder/nodeeditor.git
+[submodule "src/external/cnpy"]
+	path = src/external/cnpy
+	url = https://github.com/rogersce/cnpy.git

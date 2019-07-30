@@ -32,3 +32,9 @@ add_subdirectory(nodeeditor)
 add_library(boost_sort INTERFACE)
 target_include_directories(boost_sort INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/boost_sort/include)
 target_link_libraries(boost_sort INTERFACE ${CMAKE_THREAD_LIBS_INIT})
+
+######## cnpy ########
+#target_add_library(cnpy ${CMAKE_CURRENT_SOURCE_DIR}/cnpy/cnpy.cpp)
+#target_include_directories
+##target_link_libraries(cnpy PUBLIC)
+#add_subdirectory(cnpy)

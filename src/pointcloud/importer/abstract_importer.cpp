@@ -27,15 +27,32 @@ QSharedPointer<AbstractPointCloudImporter> AbstractPointCloudImporter::importerF
     return QSharedPointer<AbstractPointCloudImporter>();
 }
 
+QSharedPointer<AbstractPointCloudImporter> AbstractPointCloudImporter::importerForSuffixVoxel(QString suffix, std::string filepath)
+{
+    if(suffix == "npy"){
+        return QSharedPointer<AbstractPointCloudImporter>(new PcvdImporter(filepath)); //TODO change!!!!
+    }
+    else if(suffix == "pcvd")
+    {
+        return QSharedPointer<AbstractPointCloudImporter>(new PcvdImporter(filepath));
+    }else if(suffix == "ply")
+    {
+        return QSharedPointer<AbstractPointCloudImporter>(new PlyImporter(filepath));
+    }else
+        return QSharedPointer<AbstractPointCloudImporter>();
+}
+
+
 QString AbstractPointCloudImporter::allSupportedFiletypes()
 {
-  return "All Supported (*.pcvd *.ply);;PCVD (*.pcvd);;PLY (*.ply);;NPY (*.npy *npz)";
+    return "All Supported (*.pcvd *.ply);;PCVD (*.pcvd);;PLY (*.ply)";
 }
 //spx
-//QString AbstractPointCloudImporter::allSupportedFiletypesVoxel()
-//{
-//    return "All Supported (*.pcvd *.ply);;PCVD (*.pcvd);;PLY (*.ply)";
-//}
+QString AbstractPointCloudImporter::allSupportedFiletypesVoxel()
+{
+    return "All Supported (NPY (*.npy *npz)";
+
+}
 
 
 void AbstractPointCloudImporter::import()

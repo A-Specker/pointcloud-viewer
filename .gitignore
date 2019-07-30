@@ -4,3 +4,6 @@
 
 # Ignore qtcreator user directories
 CMakeLists.txt.user
+
+#clion stuff
+.idea/

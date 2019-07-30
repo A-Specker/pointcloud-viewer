@@ -7,6 +7,9 @@
 #include <pointcloud/importer/abstract_importer.hpp>
 #include <pointcloud/exporter/abstract_exporter.hpp>
 
+//spx
+#include <pointcloud_viewer/workers/import_voxel.h>
+
 #include <QMenuBar>
 #include <QMimeData>
 #include <QFileDialog>
@@ -21,10 +24,14 @@ void MainWindow::initMenuBar()
     // ======== Project ==================================================================================================
     QMenu* menu_project = menuBar->addMenu("&Project");
     QAction* import_pointcloud_layers = menu_project->addAction("&Import Pointcloud");
+    QAction* import_voxels = menu_project->addAction("&Import Voxels from File"); //spx
     QAction* export_pointcloud = menu_project->addAction("&Save Pointcloud");
 
     import_pointcloud_layers->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
     connect(import_pointcloud_layers, &QAction::triggered, this, &MainWindow::importPointcloudLayer);
+    //spx
+    import_voxels->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+    connect(import_voxels, &QAction::triggered, this, &MainWindow::importVoxels);
 
     export_pointcloud->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
     export_pointcloud->setEnabled(false);
@@ -173,6 +180,19 @@ void MainWindow::import_pointcloud(QString filepath)
 
     QSharedPointer<PointCloud> pointcloud = import_point_cloud(this, filepath);
 
+//    std::cout << pointcloud->num_points << std::endl;
+
+    if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
+        pointcloud_imported(pointcloud);
+}
+//spx
+void MainWindow::import_voxel(QString filepath)
+{
+    //no idea what this code here does, maybe set window view or something
+    pointcloud_unloaded();
+
+    QSharedPointer<PointCloud> pointcloud = import_voxel_cloud(this, filepath);
+
     if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
         pointcloud_imported(pointcloud);
 }
@@ -229,6 +249,21 @@ void MainWindow::importPointcloudLayer()
 
     import_pointcloud(file_to_import);
 }
+//spx
+void MainWindow::importVoxels()
+{
+    QString file_to_import = QFileDialog::getOpenFileName(this,
+                                                          "Select Voxelfile to import",
+                                                          ".",
+                                                          AbstractPointCloudImporter::allSupportedFiletypesVoxel());
+
+    if(file_to_import.isEmpty())
+        return;
+
+    import_pointcloud(file_to_import);
+    import_voxel(file_to_import);
+}
+
 
 void MainWindow::exportPointcloud()
 {
