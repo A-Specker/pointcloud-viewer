@@ -9,7 +9,6 @@ MainWindow::MainWindow()
     pointShaderEditor(this)
 {
   setWindowTitle("Pointcloud Viewer");
-
   setCentralWidget(&viewport);
 
   connect(&flythrough, &Flythrough::set_new_camera_frame, &viewport, &Viewport::set_camera_frame);
@@ -93,3 +92,5 @@ bool MainWindow::apply_point_shader(PointCloud::Shader new_shader, bool coordina
 
   return true;
 }
+
+

@@ -11,9 +11,10 @@ namespace renderer {
 namespace gl450 {
 
 typedef PointCloud::vertex_t vertex_t;
-
-const int COLOR_OFFSET = 3*4;
-const GLsizeiptr STRIDE = 4*4;
+//spx
+const int VERTEX_OFFSET = 8; // 0 8 weil noch ein float dazu kam mit data
+const int COLOR_OFFSET = 20; // 3*4
+const GLsizeiptr STRIDE = 24; // 4*4 wars davor
 
 const int POSITION_BINDING_INDEX = 0;
 const int COLOR_BINDING_INDEX = 1;
@@ -102,7 +103,7 @@ void PointRenderer::render_points()
     return;
 
   vertex_array_object.Bind();
-  vertex_position_buffer.BindVertexBuffer(POSITION_BINDING_INDEX, 0, STRIDE);
+  vertex_position_buffer.BindVertexBuffer(POSITION_BINDING_INDEX, VERTEX_OFFSET, STRIDE);
   vertex_position_buffer.BindVertexBuffer(COLOR_BINDING_INDEX, COLOR_OFFSET, STRIDE);
 
   shader_object.Activate();

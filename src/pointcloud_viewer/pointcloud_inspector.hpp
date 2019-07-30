@@ -6,6 +6,8 @@
 #include <pointcloud/pointcloud.hpp>
 #include <geometry/aabb.hpp>
 #include <geometry/ray.hpp>
+#include <core_library/types.hpp>
+
 
 class Viewport;
 
@@ -36,7 +38,7 @@ public slots:
   void setPointSelectionHighlightRadius(double pointSelectionHighlightRadius);
   void setPickRadius(int pickRadius);
 
-  PointCloud::vertex_t get_selected_point(PointCloud::vertex_t fallback = PointCloud::vertex_t{glm::vec3(0), glm::u8vec3(255,0,255)}) const;
+  PointCloud::vertex_t get_selected_point(PointCloud::vertex_t fallback = PointCloud::vertex_t{0.5f, glm::vec3(0), glm::u8vec3(255,0,255)}) const;
 
 signals:
   void deselect_picked_point();

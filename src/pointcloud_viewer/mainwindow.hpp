@@ -21,7 +21,6 @@ Q_OBJECT
 
 public:
   bool noninteractive = false;
-
   MainWindow();
   ~MainWindow();
 
@@ -38,6 +37,7 @@ private:
   PointCloudInspector pointCloudInspector;
   PointShaderEditor pointShaderEditor;
 
+
   RenderSettings renderSettings = RenderSettings::defaultSettings();
 
   KeypointList* keypointList;
@@ -49,11 +49,11 @@ private:
   QDockWidget* initAnimationDock();
   QDockWidget* initRenderDock();
   QDockWidget* initDataInspectionDock();
+  QDockWidget* initVoxelDock();
 
   void importPointcloudLayer();
   void exportPointcloud();
   void openAboutDialog();
-  void importVoxels(); //spx
 
   void exportCameraPath();
   void importCameraPath();
@@ -76,7 +76,8 @@ private:
   void import_pointcloud(QString filepath);
   void export_pointcloud(QString filepath, QString selectedFilter);
 
-  void import_voxel(QString filepath); //spx
+
+
 
 };
 

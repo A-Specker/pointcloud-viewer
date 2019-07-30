@@ -32,9 +32,11 @@ void MainWindow::initDocks()
   QDockWidget* dataInspectionDock = initDataInspectionDock();
   QDockWidget* animationDock = initAnimationDock();
   QDockWidget* renderDock = initRenderDock();
+  QDockWidget* voxelDock = initVoxelDock();
 
   tabifyDockWidget(dataInspectionDock, animationDock);
   tabifyDockWidget(animationDock, renderDock);
+  tabifyDockWidget(renderDock, voxelDock);
 }
 
 void remove_focus_after_enter(QAbstractSpinBox* w);
@@ -571,6 +573,16 @@ QDockWidget* MainWindow::initRenderDock()
   vbox->addStretch(1);
 
   return dock;
+}
+
+QDockWidget* MainWindow::initVoxelDock(){
+    QDockWidget* dock = new QDockWidget("VoxelViewer", this);
+    dock->setFeatures(QDockWidget::NoDockWidgetFeatures);
+    addDockWidget(Qt::LeftDockWidgetArea, dock);
+
+//    QWidget* root = new QWidget;
+//    dock->setWidget(root);
+    return dock;
 }
 
 void MainWindow::jumpToKeypoint(const QModelIndex& modelIndex)

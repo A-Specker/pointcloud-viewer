@@ -22,7 +22,7 @@ protected:
 
 private:
     std::streamsize current_progress = 0;
-    std::vector<float> map_idx_to_coords(size_t idx, size_t dim);
+    std::vector<float64_t> map_idx_to_coords(size_t idx, size_t dim);
     std::vector<int> val_to_heatmap(float64_t val);
 };
 #endif //POINTCLOUD_VIEWER_NPY_IMPORTER_H

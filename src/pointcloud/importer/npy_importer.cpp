@@ -1,4 +1,3 @@
-//spx
 #include <pointcloud/importer/npy_importer.h>
 #include <fstream>
 #include <external/libnpy/npy.hpp>
@@ -12,8 +11,8 @@ NpyImporter::NpyImporter(const std::string& input_file)
         : AbstractPointCloudImporter(input_file) {
 }
 
-std::vector<float> NpyImporter::map_idx_to_coords(size_t idx, size_t dim) {
-    std::vector<float> out(3);
+std::vector<float64_t> NpyImporter::map_idx_to_coords(size_t idx, size_t dim) {
+    std::vector<float64_t> out(3);
     out[0] = (idx % dim) * VOX_SCALE;
     out[1] = ((idx / dim) % dim) * VOX_SCALE;
     out[2] = (idx / (dim * dim)) * VOX_SCALE;
@@ -49,13 +48,17 @@ bool NpyImporter::import_implementation()
     size_t num_points = data.size();
     this->pointcloud.resize(num_points);
 
+    Buffer voxel_data;
+    std::cout << "1" << std::endl;
+    voxel_data.resize(sizeof(float64_t)*data.size());
+    std::cout << sizeof(float64_t) << std::endl;
 
     uint8_t* coordinates = pointcloud.coordinate_color.data();
     for(size_t i=0; i<num_points; ++i)
     {
         PointCloud::vertex_t vertex;
 
-        std::vector<float> coords = NpyImporter::map_idx_to_coords(i, dim);
+        std::vector<float64_t > coords = NpyImporter::map_idx_to_coords(i, dim);
         std::vector<int> cols = NpyImporter::val_to_heatmap(data[i]);
 
         vertex.coordinate.x = coords[0];
@@ -64,7 +67,9 @@ bool NpyImporter::import_implementation()
         vertex.color.r = cols[0];
         vertex.color.g = cols[1];
         vertex.color.b = cols[2];
+        vertex.value = data[i];
 
+//        std::cout << sizeof(data[i]) << std::endl;
 
         write_value_to_buffer<PointCloud::vertex_t>(coordinates, vertex);
         coordinates += PointCloud::stride;

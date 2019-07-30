@@ -28,6 +28,7 @@ public:
 
   struct vertex_t
   {
+    float64_t value;
     glm::vec3 coordinate;
     glm::u8vec3 color;
     padding<uint8_t> _padding = padding<uint8_t>();

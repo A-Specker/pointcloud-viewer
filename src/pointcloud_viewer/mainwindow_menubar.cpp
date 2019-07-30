@@ -173,7 +173,6 @@ void MainWindow::import_pointcloud(QString filepath)
 
     QSharedPointer<PointCloud> pointcloud = import_point_cloud(this, filepath);
 
-//    std::cout << pointcloud->num_points << std::endl;
 
     if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
         pointcloud_imported(pointcloud);
