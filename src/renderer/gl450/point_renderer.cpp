@@ -106,6 +106,7 @@ void PointRenderer::render_points()
   vertex_position_buffer.BindVertexBuffer(POSITION_BINDING_INDEX, VERTEX_OFFSET, STRIDE);
   vertex_position_buffer.BindVertexBuffer(COLOR_BINDING_INDEX, COLOR_OFFSET, STRIDE);
 
+
   shader_object.Activate();
   GL_CALL(glDrawArrays, GL_POINTS, 0, num_vertices);
   shader_object.Deactivate();

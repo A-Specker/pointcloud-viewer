@@ -85,7 +85,9 @@ QSharedPointer<PointCloud> import_point_cloud(QWidget* parent, QString filepath)
   case AbstractPointCloudImporter::SUCCEEDED:
       //spx this is a ugly place
       if (suffix == "npy")
-      {}
+      {
+
+      }
     return QSharedPointer<PointCloud>(new PointCloud(std::move(importer->pointcloud)));
   }
 
