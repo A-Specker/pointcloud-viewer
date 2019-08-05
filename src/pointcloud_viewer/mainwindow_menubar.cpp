@@ -176,6 +176,38 @@ void MainWindow::import_pointcloud(QString filepath)
 
     if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
         pointcloud_imported(pointcloud);
+
+//    size_t pts = pointcloud->num_points;
+//    QSharedPointer<PointCloud> pc;
+////    std::cout << pts << std::endl;
+//    std::cout << pc->num_points << std::endl;
+//    pc->resize(pts);
+//    uint8_t* coordinates = pc->coordinate_color.data();
+
+//    for(size_t i=0; i<pts; ++i) {
+////        std::vector<float64_t> cord = pointcloud->get_coords(i);
+////        std::vector<int> col = pointcloud->get_color(i);
+////
+////        PointCloud::vertex_t vertex;
+////        vertex.coordinate.x = cord[0];
+////        vertex.coordinate.y = cord[1];
+////        vertex.coordinate.z = cord[2];
+////        vertex.color.x = col[0];
+////        vertex.color.y = col[1];
+////        vertex.color.z = col[2];
+////        write_value_to_buffer<PointCloud::vertex_t>(coordinates, vertex);
+////        coordinates += PointCloud::stride;
+//    }
+//
+//    std::cout << pointcloud->get_value(123) << std::endl;
+//    std::cout << pc->get_value(1752) << std::endl;
+//    std::cout << "bla" << std::endl;
+//
+//
+//    pointcloud->set_value(123, 10.456f);
+//    std::cout << pointcloud->get_value(1752) << std::endl;
+//    std::cout << pc->get_value(1752) << std::endl;
+
 }
 
 void MainWindow::export_pointcloud(QString filepath, QString selectedFilter)

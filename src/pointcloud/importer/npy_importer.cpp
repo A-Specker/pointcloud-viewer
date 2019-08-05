@@ -49,9 +49,8 @@ bool NpyImporter::import_implementation()
     this->pointcloud.resize(num_points);
 
     Buffer voxel_data;
-    std::cout << "1" << std::endl;
     voxel_data.resize(sizeof(float64_t)*data.size());
-    std::cout << sizeof(float64_t) << std::endl;
+
 
     uint8_t* coordinates = pointcloud.coordinate_color.data();
     for(size_t i=0; i<num_points; ++i)
@@ -61,19 +60,30 @@ bool NpyImporter::import_implementation()
         std::vector<float64_t > coords = NpyImporter::map_idx_to_coords(i, dim);
         std::vector<int> cols = NpyImporter::val_to_heatmap(data[i]);
 
+        vertex.value = data[i];
         vertex.coordinate.x = coords[0];
         vertex.coordinate.y = coords[1];
         vertex.coordinate.z = coords[2];
         vertex.color.r = cols[0];
         vertex.color.g = cols[1];
         vertex.color.b = cols[2];
-        vertex.value = data[i];
 
-//        std::cout << sizeof(data[i]) << std::endl;
+        if(i==0){
+//            std::cout << "vertex_t: " <<sizeof(PointCloud::vertex_t) << std::endl;
+//            std::cout << "float64_t: " <<sizeof(float64_t) << std::endl;
+//            std::cout << " glm::vec3: " <<sizeof( glm::vec3) << std::endl;
+//            std::cout << "glm::u8vec3: " <<sizeof(glm::u8vec3) << std::endl;
+//            std::cout << "padding<uint8_t>: " <<sizeof(padding<uint8_t>) << std::endl;
+
+//            std::vector<int> ret(3);
+//
+//            std::cout << "ret: " <<sizeof(ret) << std::endl;
+//            std::cout << "int: " <<sizeof(int) << std::endl;
+
+        }
 
         write_value_to_buffer<PointCloud::vertex_t>(coordinates, vertex);
         coordinates += PointCloud::stride;
-//        std::cout <<  coords[0] << " " <<  coords[1] << " " <<  coords[2] << std::endl;
 
     }
     return true;

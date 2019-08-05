@@ -8,10 +8,11 @@
 #include <QDebug>
 #include <QSettings>
 
+#include <glm/gtx/string_cast.hpp>
+
 typedef data_type::BASE_TYPE BASE_TYPE;
 
-PointCloud::PointCloud()
-{
+PointCloud::PointCloud(){
   is_valid = false;
 }
 
@@ -119,6 +120,53 @@ bool PointCloud::can_build_kdtree() const
 bool PointCloud::has_build_kdtree() const
 {
   return this->num_points>0 && kdtree_index.is_initialized();
+}
+
+float64_t PointCloud::get_value(int idx) {
+    float64_t ret;
+    std::memcpy(&ret, this->coordinate_color.data() + 24*idx + 0, sizeof(float64_t));
+    return ret;
+}
+
+std::vector<float64_t> PointCloud::get_coords(int idx) {
+    std::vector<float64_t> ret(3);
+    glm::vec3 cpy;
+    std::memcpy(&cpy[0], this->coordinate_color.data() + 24*idx + 8, sizeof(glm::vec3));
+    ret[0] = cpy.x;
+    ret[1] = cpy.y;
+    ret[2] = cpy.z;
+    return ret;
+
+}
+
+std::vector<int> PointCloud::get_color(int idx) {
+    std::vector<int> ret(3);
+    glm::u8vec3 cpy;
+    std::memcpy(&cpy[0], this->coordinate_color.data() + 24*idx + sizeof(float64_t) + sizeof(glm::vec3), sizeof(glm::u8vec3));
+    ret[0] = cpy.x;
+    ret[1] = cpy.y;
+    ret[2] = cpy.z;
+    return ret;
+}
+
+void PointCloud::set_value(int idx, float64_t val) {
+    std::memcpy(this->coordinate_color.data() + 24*idx + 0, &val, sizeof(val));
+}
+
+void PointCloud::set_coords(int idx, std::vector<float64_t> coords) {
+    glm::vec3 c;
+    c.x = coords[0];
+    c.y = coords[1];
+    c.z = coords[2];
+    std::memcpy(this->coordinate_color.data() + 24*idx + 8, &c, sizeof(c));
+}
+
+void PointCloud::set_color(int idx, std::vector<int> col) {
+    glm::u8vec3 c;
+    c.x = col[0];
+    c.y = col[1];
+    c.z = col[2];
+    std::memcpy(this->coordinate_color.data() + 24*idx + 8 + 12, &c, sizeof(c));
 }
 
 QDebug operator<<(QDebug debug, const PointCloud::UserData& userData)

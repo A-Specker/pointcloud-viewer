@@ -34,8 +34,6 @@ void MainWindow::handleApplicationArguments()
 
       QSharedPointer<PointCloud> point_cloud = import_point_cloud(this, path);
 
-      //TODO ich hab jetzt meinen buffer mit den float drin, aber wie komm ich da ran und so...
-      
       if(Q_UNLIKELY(!point_cloud->is_valid))
       {
         abort();

@@ -26,6 +26,8 @@ public:
   };
   typedef column_t COLUMN;
 
+  // the value field is new!
+  // new the size is 24 byte (8+12+3+1)
   struct vertex_t
   {
     float64_t value;
@@ -86,6 +88,17 @@ public:
   void build_kd_tree(std::function<bool(size_t, size_t)> feedback);
   bool can_build_kdtree() const;
   bool has_build_kdtree() const;
+
+  float64_t get_value(int idx);
+  std::vector<float64_t> get_coords(int idx);
+  std::vector<int> get_color(int idx);
+
+
+
+  void set_value(int idx, float64_t val);
+  void set_coords(int idx, std::vector<float64_t> coords);
+  void set_color(int idx, std::vector<int> col);
+
 };
 
 QDebug operator<<(QDebug debug, const PointCloud::UserData& userData);
