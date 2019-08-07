@@ -114,9 +114,12 @@ bool remap_points(const std::string& vertex_shader, const QVector<uint>& binding
 
       attributes.push_back(gl::VertexArrayObject::Attribute(attribute_type, 1, attribute_binding));
     }
+
+
   }
 
-  constexpr const GLsizeiptr vertex_stride = sizeof(glm::vec3) + sizeof(glm::u8vec4);
+//  constexpr const GLsizeiptr vertex_stride = sizeof(glm::vec3) + sizeof(glm::u8vec4);
+  constexpr const GLsizeiptr vertex_stride = sizeof(float64_t ) + sizeof(glm::vec3) + sizeof(glm::u8vec4);
 
   gl::VertexArrayObject vertex_array_object(std::move(attributes));
 
@@ -139,7 +142,9 @@ bool remap_points(const std::string& vertex_shader, const QVector<uint>& binding
 
   auto remap_block = [&output_buffer, &shader_object, &input_buffer, &pointCloud, attribute_stride](GLintptr first_index, GLintptr num_vertices)
   {
-    input_buffer.Set(pointCloud->user_data.data() + first_index * attribute_stride, 0, num_vertices * attribute_stride);
+      std::cout << first_index << std::endl;
+
+      input_buffer.Set(pointCloud->user_data.data() + first_index * attribute_stride, 0, num_vertices * attribute_stride);
 
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 

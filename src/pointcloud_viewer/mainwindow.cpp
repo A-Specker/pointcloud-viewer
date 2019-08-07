@@ -38,13 +38,16 @@ MainWindow::MainWindow()
     loadedShader = p->shader;
   });
 
-  initMenuBar();
+
+
+    initMenuBar();
   initDocks();
 }
 
 MainWindow::~MainWindow()
 {
 }
+
 
 bool MainWindow::apply_point_shader(PointCloud::Shader new_shader, bool coordinates_changed, bool colors_changed)
 {

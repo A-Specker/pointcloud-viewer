@@ -26,6 +26,7 @@ QSharedPointer<AbstractPointCloudImporter> AbstractPointCloudImporter::importerF
     return QSharedPointer<AbstractPointCloudImporter>(new PlyImporter(filepath));
   }else if(suffix == "npy")
   {
+
       return QSharedPointer<AbstractPointCloudImporter>(new NpyImporter(filepath));
   }else
     return QSharedPointer<AbstractPointCloudImporter>();

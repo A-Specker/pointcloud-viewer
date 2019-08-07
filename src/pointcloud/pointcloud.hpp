@@ -89,15 +89,18 @@ public:
   bool can_build_kdtree() const;
   bool has_build_kdtree() const;
 
+
+
   float64_t get_value(int idx);
-  std::vector<float64_t> get_coords(int idx);
-  std::vector<int> get_color(int idx);
-
-
+  glm::vec3 get_coords(int idx);
+  glm::u8vec3 get_color(int idx);
 
   void set_value(int idx, float64_t val);
   void set_coords(int idx, std::vector<float64_t> coords);
   void set_color(int idx, std::vector<int> col);
+
+  void set_coords(int idx, glm::vec3 coords);
+  void set_color(int idx, glm::u8vec3 col);
 
 };
 

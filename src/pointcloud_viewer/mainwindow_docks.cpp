@@ -576,14 +576,47 @@ QDockWidget* MainWindow::initRenderDock()
 }
 
 QDockWidget* MainWindow::initVoxelDock(){
-    QDockWidget* dock = new QDockWidget("VoxelViewer", this);
+    QDockWidget* dock = new QDockWidget("&VoxelViewer", this);
     dock->setFeatures(QDockWidget::NoDockWidgetFeatures);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
+    QWidget* root = new QWidget;
+    dock->setWidget(root);
 
-//    QWidget* root = new QWidget;
-//    dock->setWidget(root);
+// ---- Thershold ----
+    QDoubleSpinBox* threshold = new QDoubleSpinBox;
+    remove_focus_after_enter(threshold);
+    threshold->setMinimum(0.0f);
+    threshold->setMaximum(1.0f);
+    threshold->setValue(0.5f);
+    threshold->setSingleStep(0.1);
+    threshold->setToolTip("At which value is there a voxel, and where is non.");
+
+    // Buttons
+    QPushButton* copyButton = new QPushButton("&Copy Originals (do it!)");
+    connect(copyButton, &QPushButton::clicked, this, &MainWindow::fill_origs);
+    QPushButton* thresholdButton = new QPushButton("&Apply Threshold");
+    connect(thresholdButton, &QPushButton::clicked, [this, threshold](){
+       this->MainWindow::apply_threshold(threshold->value());
+    });
+    QPushButton* resetButton = new QPushButton("&Reset Voxelgrid");
+    connect(resetButton, &QPushButton::clicked, this, &MainWindow::reset_pcl);
+
+
+
+
+
+
+    QVBoxLayout* vbox = new QVBoxLayout(root);
+    vbox->addWidget(copyButton);
+    vbox->addWidget(threshold);
+    vbox->addWidget(thresholdButton);
+    vbox->addWidget(resetButton);
+
+
     return dock;
 }
+
+
 
 void MainWindow::jumpToKeypoint(const QModelIndex& modelIndex)
 {

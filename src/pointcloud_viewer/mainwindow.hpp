@@ -12,6 +12,7 @@
 #include <pointcloud_viewer/point_shader_editor.hpp>
 #include <pointcloud_viewer/flythrough/flythrough.hpp>
 #include <pointcloud_viewer/workers/offline_renderer.hpp>
+#include <QPushButton>
 
 class KeypointList;
 
@@ -25,6 +26,14 @@ public:
   ~MainWindow();
 
   bool apply_point_shader(PointCloud::Shader new_shader, bool coordinates_changed, bool colors_changed);
+
+  std::vector<float64_t> orig_values;
+  std::vector<glm::vec3> orig_coords;
+  std::vector<glm::u8vec3> orig_colors;
+  void fill_origs();
+  void reset_pcl();
+  void apply_threshold(float thresh);
+
 
 signals:
   void pointcloud_imported(QSharedPointer<PointCloud> point_cloud);

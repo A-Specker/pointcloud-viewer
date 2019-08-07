@@ -21,8 +21,11 @@ std::vector<float64_t> NpyImporter::map_idx_to_coords(size_t idx, size_t dim) {
 
 std::vector<int> NpyImporter::val_to_heatmap(float64_t val){
     std::vector<int> out(3);
+//    out[0] = (val * 255);
+//    out[1] = (1.0f-val) * 255;
+//    out[2] = 0;
     out[0] = (val * 255);
-    out[1] = (1.0f-val) * 255;
+    out[1] = 0;
     out[2] = 0;
     return out;
 }

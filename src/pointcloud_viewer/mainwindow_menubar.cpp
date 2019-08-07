@@ -26,6 +26,7 @@ void MainWindow::initMenuBar()
     import_pointcloud_layers->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
     connect(import_pointcloud_layers, &QAction::triggered, this, &MainWindow::importPointcloudLayer);
 
+
     export_pointcloud->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
     export_pointcloud->setEnabled(false);
     connect(export_pointcloud, &QAction::triggered, this, &MainWindow::exportPointcloud);
@@ -167,6 +168,50 @@ void MainWindow::closeEvent(QCloseEvent*)
     QApplication::quit();
 }
 
+void MainWindow::fill_origs(){
+    if(this->pointcloud==nullptr)
+        return;
+    int pts = pointcloud->num_points;
+    orig_values.resize(pts);
+    orig_coords.resize(pts);
+    orig_colors.resize(pts);
+
+    for(int i=0; i<pts; i++){
+        orig_values[i] = pointcloud->get_value(i);
+        orig_coords[i] = pointcloud->get_coords(i);
+        orig_colors[i] = pointcloud->get_color(i);
+    }
+}
+
+void MainWindow::apply_threshold(float thresh){
+    if(this->pointcloud==nullptr)
+        return;
+
+    float f_inf = std::numeric_limits<float>::infinity();
+    glm::vec3 inf(f_inf, f_inf, f_inf);
+    glm::u8vec3 blue(0, 0, 250);
+
+    for(int i=0; i<pointcloud->num_points; i++){
+        if(pointcloud->get_value(i) < thresh){
+            pointcloud->set_coords(i, inf);
+        }
+    }
+    viewport.reapply_point_shader(true);
+}
+
+void MainWindow::reset_pcl(){
+    int pts = pointcloud->num_points;
+    for(int i=0; i<pts; i++){
+        pointcloud->set_value(i, orig_values[i]);
+//        pointcloud->set_coords(i, orig_coords[i]);
+        pointcloud->set_color(i, orig_colors[i]);
+    }
+    viewport.reapply_point_shader(true);
+
+}
+
+
+
 void MainWindow::import_pointcloud(QString filepath)
 {
     pointcloud_unloaded();
@@ -174,8 +219,25 @@ void MainWindow::import_pointcloud(QString filepath)
     QSharedPointer<PointCloud> pointcloud = import_point_cloud(this, filepath);
 
 
-    if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0)
+    if(pointcloud && pointcloud->is_valid && pointcloud->num_points>0) {
         pointcloud_imported(pointcloud);
+        MainWindow::fill_origs();
+
+    }
+
+
+
+
+//    std::cout << pointcloud->get_value(1758) << std::endl;
+//    std::cout << (int)(pointcloud->get_color(262140).x) << std::endl;
+//    std::cout << pointcloud->get_coords(262101).x << std::endl;
+//
+//    glm::u8vec3 tmper;
+//    tmper.x = 10;
+//    pointcloud->set_color(262140, tmper);
+//
+//    std::cout << (int)(pointcloud->get_color(262140).x) << std::endl;
+
 
 //    size_t pts = pointcloud->num_points;
 //    QSharedPointer<PointCloud> pc;
@@ -252,6 +314,7 @@ void MainWindow::importCameraPath()
 
 void MainWindow::importPointcloudLayer()
 {
+
     QString file_to_import = QFileDialog::getOpenFileName(this,
                                                           "Select pointcloud to import",
                                                           ".",

@@ -122,33 +122,35 @@ bool PointCloud::has_build_kdtree() const
   return this->num_points>0 && kdtree_index.is_initialized();
 }
 
+// -----------------getter --------------------------
+// --------------------------------------------------
 float64_t PointCloud::get_value(int idx) {
     float64_t ret;
     std::memcpy(&ret, this->coordinate_color.data() + 24*idx + 0, sizeof(float64_t));
     return ret;
 }
 
-std::vector<float64_t> PointCloud::get_coords(int idx) {
-    std::vector<float64_t> ret(3);
+glm::vec3 PointCloud::get_coords(int idx) {
+//    std::vector<float64_t> ret(3);
     glm::vec3 cpy;
-    std::memcpy(&cpy[0], this->coordinate_color.data() + 24*idx + 8, sizeof(glm::vec3));
-    ret[0] = cpy.x;
-    ret[1] = cpy.y;
-    ret[2] = cpy.z;
-    return ret;
-
+    std::memcpy(&cpy, this->coordinate_color.data() + 24*idx + 8, sizeof(glm::vec3));
+//    ret[0] = cpy.x;
+//    ret[1] = cpy.y;
+//    ret[2] = cpy.z;
+    return cpy;
 }
 
-std::vector<int> PointCloud::get_color(int idx) {
-    std::vector<int> ret(3);
+glm::u8vec3 PointCloud::get_color(int idx) {
+//    std::vector<int> ret(3);
     glm::u8vec3 cpy;
     std::memcpy(&cpy[0], this->coordinate_color.data() + 24*idx + sizeof(float64_t) + sizeof(glm::vec3), sizeof(glm::u8vec3));
-    ret[0] = cpy.x;
-    ret[1] = cpy.y;
-    ret[2] = cpy.z;
-    return ret;
+//    ret[0] = cpy.x;
+//    ret[1] = cpy.y;
+//    ret[2] = cpy.z;
+    return cpy;
 }
-
+// ----------------- setter --------------------------
+// ---------------------------------------------------
 void PointCloud::set_value(int idx, float64_t val) {
     std::memcpy(this->coordinate_color.data() + 24*idx + 0, &val, sizeof(val));
 }
@@ -167,6 +169,14 @@ void PointCloud::set_color(int idx, std::vector<int> col) {
     c.y = col[1];
     c.z = col[2];
     std::memcpy(this->coordinate_color.data() + 24*idx + 8 + 12, &c, sizeof(c));
+}
+//
+void PointCloud::set_coords(int idx, glm::vec3 coords) {
+    std::memcpy(this->coordinate_color.data() + 24*idx + 8, &coords, sizeof(coords));
+}
+
+void PointCloud::set_color(int idx, glm::u8vec3 col) {
+    std::memcpy(this->coordinate_color.data() + 24*idx + 8 + 12, &col, sizeof(col));
 }
 
 QDebug operator<<(QDebug debug, const PointCloud::UserData& userData)
