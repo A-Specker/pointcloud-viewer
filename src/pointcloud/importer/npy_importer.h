@@ -4,12 +4,13 @@
 #define POINTCLOUD_VIEWER_NPY_IMPORTER_H
 #include <pointcloud/importer/abstract_importer.hpp>
 #include <pointcloud/buffer.hpp>
-
+//#include <pointcloud_viewer/mainwindow.hpp>
 #include <QVector>
-
+#include <pointcloud_viewer/voxel_thresh.h>
 /**
 Implementation for loading npy files
 */
+
 class NpyImporter final : public AbstractPointCloudImporter
 {
 public:

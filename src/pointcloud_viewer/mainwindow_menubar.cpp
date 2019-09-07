@@ -7,6 +7,8 @@
 #include <pointcloud/importer/abstract_importer.hpp>
 #include <pointcloud/exporter/abstract_exporter.hpp>
 
+#include <pointcloud_viewer/voxel_thresh.h>
+
 #include <QMenuBar>
 #include <QMimeData>
 #include <QFileDialog>
@@ -187,17 +189,25 @@ void MainWindow::apply_threshold(float thresh){
     if(this->pointcloud==nullptr)
         return;
 
-    float f_inf = std::numeric_limits<float>::infinity();
-    glm::vec3 inf(f_inf, f_inf, f_inf);
-    glm::u8vec3 blue(0, 0, 250);
+    VOXEL_THRESH = thresh;
+    QString s = QString::fromStdString(FILE_PATH);
+    import_pointcloud(s);
 
-    for(int i=0; i<pointcloud->num_points; i++){
-        if(pointcloud->get_value(i) < thresh){
-            pointcloud->set_coords(i, inf);
-        }
-    }
-    viewport.reapply_point_shader(true);
+
+    //    float f_inf = std::numeric_limits<float>::infinity();
+//    glm::vec3 inf(f_inf, f_inf, f_inf);
+//    glm::u8vec3 blue(0, 0, 250);
+//
+//    for(int i=0; i<pointcloud->num_points; i++){
+//        if(pointcloud->get_value(i) < thresh){
+//            pointcloud->set_coords(i, inf);
+//        }
+//    }
+//
+//    viewport.reapply_point_shader(true);
 }
+
+
 
 void MainWindow::reset_pcl(){
     int pts = pointcloud->num_points;
@@ -214,7 +224,12 @@ void MainWindow::reset_pcl(){
 
 void MainWindow::import_pointcloud(QString filepath)
 {
+//    std::cout << "import_pointcloud: " <<  FILE_PATH << std::endl;
+
+    FILE_PATH = filepath.toStdString();
     pointcloud_unloaded();
+
+    std::cout << "Load File from: " << FILE_PATH << " with Threshold: " << VOXEL_THRESH << std::endl;
 
     QSharedPointer<PointCloud> pointcloud = import_point_cloud(this, filepath);
 

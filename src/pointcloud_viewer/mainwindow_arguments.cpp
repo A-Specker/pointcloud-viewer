@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <QSharedPointer>
 #include <QDebug>
+#include <pointcloud_viewer/voxel_thresh.h>
 
 void MainWindow::handleApplicationArguments()
 {
@@ -32,7 +33,10 @@ void MainWindow::handleApplicationArguments()
 
       const QString path = arguments[argument_index];
 
-      QSharedPointer<PointCloud> point_cloud = import_point_cloud(this, path);
+//        std::cout << "Path  is: " <<  path.toStdString() << std::endl;
+        FILE_PATH = path.toStdString();
+//        std::cout << "Path  is now: " <<  FILE_PATH << std::endl;
+        QSharedPointer<PointCloud> point_cloud = import_point_cloud(this, path);
 
       if(Q_UNLIKELY(!point_cloud->is_valid))
       {

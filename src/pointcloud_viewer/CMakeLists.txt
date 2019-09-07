@@ -79,6 +79,6 @@ add_executable(pointcloud_viewer
   viewport.hpp
   visualizations.cpp
   visualizations.hpp
-)
+        voxel_thresh.h voxel_thresh.cpp)
 
 target_link_libraries(pointcloud_viewer Qt5::Widgets NodeEditor::nodes glm renderer geometry pointcloud)

@@ -16,6 +16,14 @@
 
 class KeypointList;
 
+static std::string FILE_PATH_MAIN;
+static std::string get_FILE_PATH_MAIN(){
+    return FILE_PATH_MAIN;
+};
+static void set_FILE_PATH_MAIN(std::string s){
+    FILE_PATH_MAIN = s;
+};
+
 class MainWindow : public QMainWindow
 {
 Q_OBJECT
@@ -26,7 +34,7 @@ public:
   ~MainWindow();
 
   bool apply_point_shader(PointCloud::Shader new_shader, bool coordinates_changed, bool colors_changed);
-
+//  static Variables variables();
   std::vector<float64_t> orig_values;
   std::vector<glm::vec3> orig_coords;
   std::vector<glm::u8vec3> orig_colors;
@@ -89,6 +97,7 @@ private:
 
 
 };
+
 
 
 #endif // POINTCLOUDVIEWER_MAINWINDOW_HPP_

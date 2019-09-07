@@ -21,12 +21,23 @@ std::vector<float64_t> NpyImporter::map_idx_to_coords(size_t idx, size_t dim) {
 
 std::vector<int> NpyImporter::val_to_heatmap(float64_t val){
     std::vector<int> out(3);
-//    out[0] = (val * 255);
-//    out[1] = (1.0f-val) * 255;
-//    out[2] = 0;
-    out[0] = (val * 255);
-    out[1] = 0;
-    out[2] = 0;
+    float64_t eps = 0.01;
+    // cases: val is 2: predicted too much, 3 it forgot smthing, else default blue
+    if (val>2-eps && val<2+eps){
+        out[0] = 0;
+        out[1] = 255;
+        out[2] = 0;
+    }
+    else if(val>3-eps && val<3+eps) {
+        out[0] = 255;
+        out[1] = 0;
+        out[2] = 0;
+    }
+    else {
+        out[0] = 0;
+        out[1] = 0;
+        out[2] = 255;
+    }
     return out;
 }
 
@@ -42,7 +53,7 @@ int NpyImporter::voxel_dim(size_t total_size){
 bool NpyImporter::import_implementation()
 {
     std::vector<unsigned long> shape;
-    std::vector<float64_t > data; // TODO: hier waere was dynamisches schoener
+    std::vector<float64_t > data; // TODO: hier waere was dynamisches schoener, oder wenigstens nicht 64...
     npy::LoadArrayFromNumpy(input_file, shape, data);
 
     int dim = voxel_dim(data.size());
@@ -54,6 +65,11 @@ bool NpyImporter::import_implementation()
     Buffer voxel_data;
     voxel_data.resize(sizeof(float64_t)*data.size());
 
+    float thresh = VOXEL_THRESH;
+
+    float f_inf = std::numeric_limits<float64_t>::infinity();
+    glm::vec3 inf(f_inf, f_inf, f_inf);
+
 
     uint8_t* coordinates = pointcloud.coordinate_color.data();
     for(size_t i=0; i<num_points; ++i)
@@ -64,9 +80,16 @@ bool NpyImporter::import_implementation()
         std::vector<int> cols = NpyImporter::val_to_heatmap(data[i]);
 
         vertex.value = data[i];
-        vertex.coordinate.x = coords[0];
-        vertex.coordinate.y = coords[1];
-        vertex.coordinate.z = coords[2];
+        if(vertex.value < thresh){
+            vertex.coordinate.x = f_inf;
+            vertex.coordinate.y = f_inf;
+            vertex.coordinate.z = f_inf;
+        }
+        else {
+            vertex.coordinate.x = coords[0];
+            vertex.coordinate.y = coords[1];
+            vertex.coordinate.z = coords[2];
+        }
         vertex.color.r = cols[0];
         vertex.color.g = cols[1];
         vertex.color.b = cols[2];
@@ -91,5 +114,6 @@ bool NpyImporter::import_implementation()
     }
     return true;
 }
+
 
 
