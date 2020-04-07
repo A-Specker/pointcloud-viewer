@@ -55,35 +55,48 @@ bool NpyImporter::import_implementation()
     std::vector<unsigned long> shape;
     std::vector<float64_t > data; // TODO: hier waere was dynamisches schoener, oder wenigstens nicht 64...
     npy::LoadArrayFromNumpy(input_file, shape, data);
+    pointcloud.aabb = aabb_t::invalid();
+
+    size_t num_points = data.size();
+    float thresh = VOXEL_THRESH;
+
+    std::vector<int> visible_points;
+    std::vector<int> visible_idx;
+    for(size_t i=0; i<num_points; ++i){
+        if(data[i] > thresh) {
+            visible_points.push_back(i);
+//            visible_points
+        }
+    }
+
+    size_t num_vis_points = visible_points.size();
 
     int dim = voxel_dim(data.size());
 
-    pointcloud.aabb = aabb_t::invalid();
-    size_t num_points = data.size();
-    this->pointcloud.resize(num_points);
+    this->pointcloud.resize(num_vis_points);
 
     Buffer voxel_data;
-    voxel_data.resize(sizeof(float64_t)*data.size());
+    voxel_data.resize(sizeof(float64_t)*num_vis_points);
 
-    float thresh = VOXEL_THRESH;
 
     float f_inf = std::numeric_limits<float64_t>::infinity();
     glm::vec3 inf(f_inf, f_inf, f_inf);
 
 
     uint8_t* coordinates = pointcloud.coordinate_color.data();
-    for(size_t i=0; i<num_points; ++i)
+    for(size_t i=0; i<visible_points.size(); ++i)
     {
         PointCloud::vertex_t vertex;
 
-        std::vector<float64_t > coords = NpyImporter::map_idx_to_coords(i, dim);
-        std::vector<int> cols = NpyImporter::val_to_heatmap(data[i]);
+        std::vector<float64_t > coords = NpyImporter::map_idx_to_coords(visible_points.at(i), dim);
+        std::vector<int> cols = NpyImporter::val_to_heatmap(data[visible_points[i]]);
 
-        vertex.value = data[i];
+        vertex.value = data[visible_points[i]]; //TODO
         if(vertex.value < thresh){
             vertex.coordinate.x = f_inf;
             vertex.coordinate.y = f_inf;
             vertex.coordinate.z = f_inf;
+            std::cout << "this is bad!"<< std::endl;
         }
         else {
             vertex.coordinate.x = coords[0];
@@ -103,7 +116,8 @@ bool NpyImporter::import_implementation()
 
 //            std::vector<int> ret(3);
 //
-//            std::cout << "ret: " <<sizeof(ret) << std::endl;
+            std::cout << "total: " << visible_points.size() <<  std::endl;
+            std::cout << "PCL: " << visible_points.size() <<  std::endl;
 //            std::cout << "int: " <<sizeof(int) << std::endl;
 
         }
